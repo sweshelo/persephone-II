@@ -1,25 +1,16 @@
-import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { Ranking } from "../types/ranking";
 
 export default function Index() {
+  const [ranking, setRanking] = useState<Ranking[]>([]);
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
-      <Link href={"/about"}>
-        Go To About
-      </Link>
+    <View className="flex-1 items-center justify-center bg-white">
+      <View>
+        <Text className="text-center text-lg">Hello</Text>
+        <Text>{JSON.stringify(ranking)}</Text>
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#25292e',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#fff'
-  }
-})
