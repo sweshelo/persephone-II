@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { GridComponent } from 'echarts/components';
@@ -9,6 +9,14 @@ echarts.use([SkiaRenderer, LineChart, GridComponent]);
 
 export const PointsGraph = () => {
   const skiaRef = useRef<any>(null);
+  const chartsRef = useRef<any>(null);
+  const [chartWidth, setChartWidth] = useState(0);
+
+  const handleLayout = (e: any) => {
+    const { width } = e.nativeEvent.layout;
+    setChartWidth(width)
+  }
+
   useEffect(() => {
     const option = {
       xAxis: {
@@ -28,17 +36,25 @@ export const PointsGraph = () => {
     let chart: any;
     if (skiaRef.current) {
       chart = echarts.init(skiaRef.current, 'light', {
+        // @ts-ignore
         renderer: 'skia',
         width: 400,
         height: 400,
       });
       chart.setOption(option);
+      chartsRef.current = chart;
     }
     return () => chart?.dispose();
   }, []);
 
+  useEffect(() => {
+    chartsRef.current?.resize({
+      width: chartWidth,
+    })
+  }, [chartWidth]);
+
   return (
-    <View className='bg-white rounded-lg shadow'>
+    <View className='bg-white rounded-lg shadow' onLayout={handleLayout}>
       <SkiaChart ref={skiaRef} />
     </View>
   );
