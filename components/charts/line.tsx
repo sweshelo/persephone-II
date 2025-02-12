@@ -2,13 +2,13 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { GridComponent } from 'echarts/components';
-import { SkiaRenderer, SkiaChart } from '@wuba/react-native-echarts';
+import { SVGRenderer, SvgChart } from '@wuba/react-native-echarts';
 import { View } from 'react-native';
 
-echarts.use([SkiaRenderer, LineChart, GridComponent]);
+echarts.use([SVGRenderer, LineChart, GridComponent]);
 
 export const PointsGraph = () => {
-  const skiaRef = useRef<any>(null);
+  const chartRef = useRef<any>(null);
   const chartsRef = useRef<any>(null);
   const [chartWidth, setChartWidth] = useState(0);
 
@@ -34,15 +34,13 @@ export const PointsGraph = () => {
       ],
     };
     let chart: any;
-    if (skiaRef.current) {
-      chart = echarts.init(skiaRef.current, 'light', {
-        // @ts-ignore
-        renderer: 'skia',
+    if (chartRef.current) {
+      chart = echarts.init(chartRef.current, 'light', {
+        renderer: 'svg',
         width: 400,
         height: 400,
       });
       chart.setOption(option);
-      chartsRef.current = chart;
     }
     return () => chart?.dispose();
   }, []);
@@ -55,7 +53,7 @@ export const PointsGraph = () => {
 
   return (
     <View className='bg-white rounded-lg shadow' onLayout={handleLayout}>
-      <SkiaChart ref={skiaRef} />
+      <SvgChart ref={chartRef} />
     </View>
   );
 }
